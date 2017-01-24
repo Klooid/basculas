@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Basculas Inteligentes</title>
+	<meta charset="utf-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> 
+</head>
+<body>
+	
+	<div class="contenido">
+		<center>
+			<div class="title">
+				<h1>Bienvenidos a Farmacia Monserrat</h1>
+			</div>
+			<!--Publicidad e inicio-->
+			<div class="panel" id="panel1" style="display:none">
+					<div class="ads">
+						<video id="video" src=""  preload="auto" onended="videoreload()" onplaying="playagain()" style="display:none" muted="">
+						</video>
+
+						<img src="https://pbs.twimg.com/profile_images/587949417577066499/3uCD4xxY.jpg" id="pictures" style="display:none">
+					</div>
+
+					<button class="bigbutton" id="newRequest">Medirte</button>
+					<p>Anúnciate aquí visitando: www.klooid.com/ads</p>
+			<!--Selección de parámetros-->
+			</div>
+			<div id="panel2" class="panel" style="display:none;">
+				<div style="padding-top: 0px">
+					<p style="width:100%; font-size: 24px; display: block">Seleccione las mediciones que deseas realizar:</p>
+					<center>
+						<div class="options radio" style="background-color: green" id="optpeso" param="peso" price="50">
+							<div class="selectors">
+								<h1>Solo peso</h1>
+								<h2>₡ 50</h2>
+							</div>
+						</div>
+						<div class="options radio" style="background-color:#FFBF00" id="optaltura" param="altura" price="50">
+							<div class="selectors">
+								<h1>Solo altura</h1>
+								<h2>₡ 50</h2>
+							</div>
+						</div>
+						<div class="options check" style="background-color: #FE2E2E" id="optimc" param="IMC" price="100">
+							<div class="selectors">
+								<h1>IMC + peso + altura</h1>
+								<h2>₡ 100</h2>
+							</div>
+						</div>
+					</center>
+					<div style="display:block"></div>
+					<center>
+						<div class="options check" style="background-color: #58ACFA; height:150px" param="calorias" price="150">
+							<div class="selectors">
+								<h1>Calorías recomendadas</h1>
+								<h2>₡ 150</h2>
+							</div>
+						</div>
+						<div class="options check" style="background-color: #FF8000; height:150px" param="pesorecomendado" price="100">
+							<div class="selectors">
+								<h1>Peso recomendado</h1>
+								<h2>₡ 100</h2>
+							</div>
+						</div>
+					</center>
+					<div style="display:block; padding-top: 10px;"></div>
+					<button class="midbutton inline" id="cancel2">Cancelar</button>	
+					<button class="midbutton inline" id="selected">Continuar</button>
+				</div>
+			</div>
+			<!--Espera de pago-->
+			<div class="panel" id="panel3" style="display: none;">
+				<div style="padding-top: 20px" class="blocks"></div>
+				<img src="img/pay.svg" class="blocks icon animated">
+				<p style="font-size: 20px">Para proceder, favor depositar:</p>
+				<h1 style="font-size: 50px">₡ <span id="price">100</span></h1>
+				<p> El sistema detectará cuando el monto ha sido completado y procederá con la medición. Ten en cuenta que el sistema no puede devolver monedas ni dar cambio</p>
+				<div style="display:block; padding-top: 10px;"></div>
+				<button class="midbutton inline" id="cancel3">Cancelar</button>	
+				<button class="midbutton inline" id="paid" style="display:none">Test</button>	
+			</div>
+			<!--Espera de resultados-->
+			<div class="panel" id="panel4" style="display: none;">
+				<div style="padding-top: 120px" class="blocks"></div>
+				<img src="img/human.svg" class="blocks icon animated">
+				<p style="font-size: 25px">Esperando los resultados de las mediciones físicas</p>
+				<p style="font-size: 25px">Por favor colóquese en la báscula en posición firme y colocando los pies en los espacios demarcados</p>
+				<div style="display:block; padding-top: 10px;"></div>
+				<button class="midbutton inline" id="gotResults" style="display:none">Test</button>	
+			</div>
+			<!--Peso-->
+			<div class="panel" id="resultPeso" style="display: none;">
+				<div style="padding-top: 120px" class="blocks"></div>
+				<img src="img/weighing.svg" class="blocks icon">
+				<p style="font-size: 25px">Su peso es de:</p>
+				<div style="display:block; padding-top: 10px;"></div>
+				<h1><span id="showWeight">31</span>kg</h1>
+				<button class="midbutton inline share">Continuar</button>	
+			</div>
+			<!--Altura-->
+			<div class="panel" id="resultAltura" style="display: none;">
+				<div style="padding-top: 120px" class="blocks"></div>
+				<img src="img/height.svg" class="blocks icon">
+				<p style="font-size: 25px">Su estatura es de:</p>
+				<div style="display:block; padding-top: 10px;"></div>
+				<h1><span id="showHeight">31</span>m</h1>
+				<button class="midbutton inline share">Continuar</button>	
+			</div>
+			<!--IMC-->
+			<div class="panel" id="resultIMC" style="display: none;">
+				<div style="padding-top: 10px" class="blocks"></div>
+				<img src="img/human.svg" class="blocks icon">
+				<p style="font-size: 25px">Sus resultados son:</p>
+				<div style="display:block; padding-top: 10px;"></div>
+				<center>
+					<div class="options active" style="height:150px; border: 5px solid white;background-color: green" param="">
+						<div class="selectors">
+							<h1>Peso</h1>
+							<h1 style="font-size:30px; padding-top: 2px"><span id="imcpeso">1</span> kg</h1>
+						</div>
+					</div>
+					<div class="options active" style="height:150px; border: 5px solid white; background-color:#FFBF00" param="">
+						<div class="selectors">
+							<h1>Altura</h1>
+							<h1 style="font-size:30px; padding-top: 2px"><span id="imcaltura">1</span> m</h1>
+						</div>
+					</div>
+					<div class="options active" style="height:150px; border: 5px solid white; background-color: #FE2E2E" param="">
+						<div class="selectors">
+							<h1>IMC</h1>
+							<h1 style="font-size:30px; padding-top: 2px"><span id="imcresult">1</span></h1>
+						</div>
+					</div>
+				</center>
+				<button class="midbutton inline share">Continuar</button>	
+			</div>
+			<!--Calorías recomendadas: 1 - Pregunta Sexo-->
+			<div class="panel" id="calorias_preguntasSexo" style="display: none;">
+				<div style="padding-top: 30px">
+					<center>
+						<p style="width:100%; font-size: 24px; display: block">Seleccione su sexo:</p>
+						<div style="display:block; padding-top: 10px;"></div>
+						<div class="options" style="height:150px;background-color: #58ACFA" param="male">
+							<div class="selectors">
+								<h1 style="font-size:30px;">
+									Masculino
+								</h1>
+							</div>
+						</div>
+						<div class="options" style="height:150px;background-color: #FE2E2E" param="female">
+							<div class="selectors">
+								<h1 style="font-size:30px;">
+									Femenino
+								</h1>
+							</div>
+						</div>
+						<div style="display:block; padding-top: 10px;"></div>
+						<button class="midbutton inline" id="calorias_sexSubmit">Continuar</button>
+					</center>
+				</div>
+			</div>
+			<!--Calorías recomendadas: 2 - Pregunta Ejercicio-->
+			<div class="panel" id="calorias_preguntasEjercicio" style="display: none;">
+				<div style="padding-top: 30px">
+					<center>
+						<p style="width:100%; font-size: 24px; display: block">¿Qué tipo de ejercicio practicas?</p>
+						<div style="display:block; padding-top: 10px;"></div>
+						<div class="options" style="height:150px;background-color: #FE2E2E" param="1.2">
+							<div class="selectors">
+								<h1>Poco o ningún</h1>
+								<h2>Menos de 1 día a la semana</h2>
+							</div>
+						</div>
+						<div class="options" style="height:150px;background-color: #FF8000" param="1.375">
+							<div class="selectors">
+								<h1>Ejercicio Ligero</h1>
+								<h2>1-3 días a la semana</h2>
+							</div>
+						</div>
+						<div class="options" style="height:150px;background-color: #FFBF00" param="1.55">
+							<div class="selectors">
+								<h1>Ejercicio Moderado</h1>
+								<h2>3-5 días a la semana</h2>
+							</div>
+						</div>
+						<div class="options" style="height:150px;background-color: #86B404" param="1.725">
+							<div class="selectors">
+								<h1>Ejercicio Fuerte</h1>
+								<h2>6-7 días a la semana</h2>
+							</div>
+						</div>
+						<div class="options" style="height:150px;background-color: #04B404" param="1.9">
+							<div class="selectors">
+								<h1>Ejercicio Intensivo</h1>
+								<h2>Entrenamientos 2 veces por día</h2>
+							</div>
+						</div>
+						
+						<div style="display:block; padding-top: 10px;"></div>
+						<button class="midbutton inline" id="calorias_ejercicioSubmit">Continuar</button>
+					</center>
+				</div>
+			</div>
+			<!--Calorías recomendadas: 3 - Pregunta Edad-->
+			<div class="panel" style="" id="edad" style="display: none;">
+				<center>
+					<div style="display:block; padding-top: 10px;"></div>
+					<div class="subpanel left">
+						<center>
+							<p style="width:100%; font-size: 24px; display: block">Digite su edad:</p>
+							<div style="display:block; padding-top: 10px;"></div>
+							<input type="text" name="" value="" disabled id="calEdad">
+							<div style="display:block; padding-top: 170px;"></div>
+							<button class="midbutton inline" id="edadSubmit">Continuar</button>
+						</center>
+					</div>
+					<div class="subpanel right">
+						<div style="display:block; padding-top: 60px;"></div>
+						<div id="keyboard">
+							<div class="keys" val="7">
+								<div style="display:block; padding-top: 10px;"></div>
+								7
+							</div>
+							<div class="keys" val="8">
+								<div style="display:block; padding-top: 10px;"></div>
+								8
+							</div>
+							<div class="keys" val="9">
+								<div style="display:block; padding-top: 10px;"></div>
+								9
+							</div>
+							<div style="display:block; padding-top: 5px;"></div>
+							<div class="keys" val="4">
+								<div style="display:block; padding-top: 10px;"></div>
+								4
+							</div>
+							<div class="keys" val="5">
+								<div style="display:block; padding-top: 10px;"></div>
+								5
+							</div>
+							<div class="keys" val="6">
+								<div style="display:block; padding-top: 10px;"></div>
+								6
+							</div>
+							<div style="display:block; padding-top: 5px;"></div>
+							<div class="keys" val="1">
+								<div style="display:block; padding-top: 10px;"></div>
+								1
+							</div>
+							<div class="keys" val="2">
+								<div style="display:block; padding-top: 10px;"></div>
+								2
+							</div>
+							<div class="keys" val="3">
+								<div style="display:block; padding-top: 10px;"></div>
+								3
+							</div>
+							<div style="display:block; padding-top: 5px;"></div>
+							<div class="keys" style="width:120px" val="0">
+								<div style="display:block; padding-top: 10px;"></div>
+								0
+							</div>
+							<div class="keys" style="width:120px;" val="DEL">
+								<div style="display:block; padding-top: 10px; "></div>
+								←
+							</div>
+						</div>
+						
+					</div>
+					
+				</center>
+			</div>
+			<!--Calorías recomendadas: Resultados-->
+			<div class="panel" id="result_calorias" style="display: none;">
+				<div style="padding-top: 35px" class="blocks"></div>
+				<img src="img/cals.svg" class="blocks icon">
+				<p style="font-size: 25px">Su tasa metabólica corporal es de:</p>
+				<div style="display:block; padding-top: 10px;"></div>
+				<h1><span id="showCalories">0</span>kcal</h1>
+				<p>Debes consumir cantidades cercanas a este valor de calorías</p>
+				<button class="midbutton inline share">Continuar</button>	
+				
+			</div>
+			<!--Peso recomendado-->
+			<div class="panel" id="resultPesoRecomendado" style="display: none;">
+				<div style="padding-top: 10px" class="blocks"></div>
+				
+				<p style="font-size: 25px">Sus resultados son:</p>
+				<div style="display:block; padding-top: 10px;"></div>
+				<center>
+					<div class="options active" style="height:150px; border: 5px solid white;background-color: green" param="">
+						<div class="selectors">
+							<h1>Peso Actual</h1>
+							<h1 style="font-size:30px; padding-top: 2px"><span id="pesorecomendado_actual">1</span> kg</h1>
+						</div>
+					</div>
+					<div class="options active" style="height:150px; border: 5px solid white; background-color:#FFBF00" param="">
+						<div class="selectors">
+							<h3 style="font-size: 20px; font-weight: 100;">Peso Recomendado mínimo</h3>
+							<h1 style="font-size:30px; margin-top: -50px"><span id="pesorecomendado_sedentario">1</span> kg</h1>
+						</div>
+					</div>
+					<div class="options active" style="height:150px; border: 5px solid white; background-color: #FE2E2E" param="">
+						<div class="selectors">
+							<h3 style="font-size: 20px; font-weight: 100;">Peso Recomendado máximo</h3>
+							<h1 style="font-size:30px; margin-top: -50px"><span id="pesorecomendado_activo">1</span>kg</h1>
+						</div>
+					</div>
+					<div style="display:block; padding-top: 10px;"></div>
+					<p>Entre más actividad física tengas, mayor peso debes tener. Si tu rutina es ligera, tu peso debe rondar el mínimo.</p>
+				</center>
+				<button class="midbutton inline share">Continuar</button>	
+			</div>
+
+			<!--Compartir resultados-->
+			<div class="panel" id="shareResults" style="display: none;">
+				<button class="midbutton inline send">Continuar</button>	
+			</div>
+		</center>
+		<div class="footer">
+			Desarrollado por: <b>Klooid Innovations</b> - 2017
+		</div>
+	</div>
+
+	<script type="text/javascript" src="js/script.js"> </script>
+</body>
+</html>

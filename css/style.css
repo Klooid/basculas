@@ -1,0 +1,196 @@
+body{
+	background-color: #000;
+	font-family: 'Open Sans', sans-serif;
+	overflow: hidden;
+}
+button{
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 2px;
+	color: white;
+	padding:20px;
+	background-color: transparent;
+}
+h1{
+	font-size: 35px;
+}
+input[type=text] {
+    width: 50%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 2px solid white;
+    color:white;
+    background-color: transparent;
+    font-size: 20px;
+}
+
+.bigbutton{
+	font-size: 50px;
+}
+.bigbutton:hover{
+	background-color: white;
+	color: black;
+}
+.midbutton{
+	font-size: 30px;
+}
+.midbutton:hover{
+	background-color: white;
+	color: black;
+}
+
+#video{
+	/*position: relative;
+	top:0;
+	left:0;*/
+
+	height: 400px;
+	margin-top: -20px;
+	z-index: 1;
+	display: block;
+}
+#pictures{
+	/*position: relative;
+	top:0;
+	left:0;*/
+
+	height: 400px;
+	margin-top: -20px;
+	z-index: 1;
+	display: block;
+}
+.ads{
+
+	/*position: relative;
+	top:0;
+	left:0;*/
+	min-width: 450px;
+	height: 400px;
+	margin-top: -20px;
+	z-index: 0;
+	display: block;
+
+}
+.contenido{
+	position: absolute;
+	width:100%;
+	height: 100%;
+	color:#FFF;
+	z-index: 1;
+	top: 0px;
+	left: 0px;
+}
+.title{
+	position: relative;
+	width:675px;
+	max-width: 80%;
+	height:auto;
+	border: 1px solid #FFF;
+	margin: 20px;
+	padding: 10px;
+	display: block;
+}
+.footer{
+	position: absolute;
+	width:360px;
+	height: auto;
+	margin:10px;
+	bottom:0;
+	right:0;
+}
+.panel{
+	width:80%;
+	height:100px;
+	position: relative;
+	display: block;
+}
+.subpanel{
+	width:45%;
+	height:100px;
+	position: relative;
+	display: inline-block;
+
+}
+.options{
+	width:150px;
+	height:150px;
+	display: inline-block;
+	position: relative;
+	margin: 10px;
+	filter: brightness(100%);
+	border-style: solid;
+	border-width: 5px;
+	border-color: transparent;
+}
+.options:hover{
+	border-color: white;
+}
+.active{
+	border-color: white;
+}
+.options > .selectors{
+	position: absolute;
+	width:150px;
+	height:150px;
+}
+.selectors > h1
+{
+	display: block;
+	padding-top: 30px;
+	font-size: 20px;
+	font-weight: 100;
+}
+.selectors > h2
+{
+	display: block;
+	padding-top: 5px;
+	font-size: 12px;
+	font-weight: 100;
+}
+.inline{
+	display: inline-block;
+	margin: 0 10px;
+}
+.blocks{
+	display: block;
+}
+.icon{
+	width:150px;
+	height:150px;
+}
+.animated{
+	animation-name: fade;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+}
+.changeAds{
+	animation-name: fade;
+    animation-duration: 2s;
+    animation-iteration-count: 1;
+}
+@keyframes fade {
+    0%   {opacity: 1;}
+    50%  {opacity: 0.1;}
+    100% {opacity: 1;}
+}
+.right{
+	float: right;
+}
+.left{
+	float: left;
+}
+.keys{
+	width:75px;
+	height: 75px;
+	display: inline-block;
+	margin:5px;
+
+	position: relative;
+	font-size: 40px;
+	color: black;
+	background-color: white;
+}
+.keys:hover{
+	background-color: #CCC;
+}
+
