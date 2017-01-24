@@ -1,4 +1,4 @@
-
+// JS Backend
 var express = require('express');
 var app = express();
 var http = require("http").Server(app);
@@ -70,7 +70,7 @@ function sendPrice(res, tarea, monto)
 	setTimeout(function(){
 		credito = monto;
 		completedFlag = 1;
-		
+
 	},5000);
 }
 
@@ -94,7 +94,7 @@ function sendVideos(path,res)
 	    		ads = {"type":"video", "filename":file};
 	    		response.push(ads);
 	    	}
-	    	
+
 
 	    }
 	    res.json(response);

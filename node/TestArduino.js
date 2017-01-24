@@ -1,3 +1,5 @@
+// JS Backend
+
 var SerialPort = require('serialport');
 var port = new SerialPort('/dev/ttyACM0', {
 	baudRate: 9600
@@ -12,12 +14,12 @@ setInterval(function(){
 	if(status == 'ON')
 	{
 		port.write('OFF');
-		status = 'OFF';	
+		status = 'OFF';
 	}
 	else
 	{
 		port.write('ON');
-		status = 'ON';	
+		status = 'ON';
 	}
-		
+
 },5000);
