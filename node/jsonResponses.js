@@ -1,4 +1,5 @@
-// JS Backend
+// Klooid
+// JS Backend Por Luis
 var express = require('express');
 var app = express();
 var http = require("http").Server(app);
