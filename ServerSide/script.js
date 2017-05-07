@@ -1,13 +1,13 @@
 /*
 ------------------------------------------------------------------------------------------------------------------------------------
-Klooid Innovations
-Departamentos de Energia e Innovacion
-Codigo de servidor de basculas para control de videos
-Desarrollado por:
-	- Luis Leon (Diseño electrónico. Desarrollo web Backend y Arduino)
-	- Christopher Quiros (Diseño web. Desarrollo web Frontend)
-Horas invertidas: 
-	7-05-2017: 3H
+	Klooid Innovations
+	Departamentos de Energia e Innovacion
+	Codigo de servidor de basculas para control de videos
+	Desarrollado por:
+		- Luis Leon (Diseño electrónico. Desarrollo web Backend y Arduino)
+		- Christopher Quiros (Diseño web. Desarrollo web Frontend)
+	Horas invertidas: 
+		7-05-2017: 3H
 ------------------------------------------------------------------------------------------------------------------------------------
 */
 
@@ -50,6 +50,7 @@ function loop()
 			for(var i in rows)
 			{
 				viewDBmedia(rows, i);
+				viewFilemedia(rows, i);
 			}
 		}
 	});
@@ -75,3 +76,20 @@ function viewDBmedia(rows, i)
 	var missing = exp.getTime() - now.getTime();	// Find the difference
 	console.log("Missing: " + Math.round(missing/60000) + " minutes");
 }
+
+/*
+	Debug - View if file exists
+*/
+function viewFilemedia(rows, i)
+{
+	fs.stat("media/"+rows[i].link,function(err, stat){
+		if(err == null)
+			console.log("File '" + rows[i].link + "' exists");
+		else if(err.code == 'ENOENT')
+			console.log("File '" + rows[i].link + "' not exists");
+		else
+			console.log("Error: " + err.code);
+	});
+}
+/*
+*/
