@@ -42,15 +42,16 @@ setInterval(function(){
 */
 function loop()
 {
-	conn.query("SELECT * FROM mediasources", function(err,rows, fields){
+	conn.query("SELECT * FROM mediasources ORDER BY expiration DESC LIMIT 1000", function(err,rows, fields){
 		
 		if(err) throw err;
 		else
 		{
 			for(var i in rows)
 			{
-				viewDBmedia(rows, i);
-				viewFilemedia(rows, i);
+				// View if file exists
+				viewFilemedia(rows, i,viewDBmedia);
+				
 			}
 		}
 	});
@@ -59,9 +60,8 @@ function loop()
 /*
 	Debug - View DB data
 */
-function viewDBmedia(rows, i)
+function viewDBmedia(rows, i, fstat)
 {
-	console.log("---------------------------")
 	console.log("Owner: " + rows[i].ownerid);
 	console.log("Path: " + rows[i].link);
 	console.log("Show Type: " + rows[i].showtype);
@@ -75,21 +75,88 @@ function viewDBmedia(rows, i)
 	var now = new Date();							// Acquire this moment's time
 	var missing = exp.getTime() - now.getTime();	// Find the difference
 	console.log("Missing: " + Math.round(missing/60000) + " minutes");
+
+	// See the status of the register
+	if(rows[i].status == "Scheduled" && missing < 0 && fstat == "EXIST")
+		// Take off the media
+		deleteFilemedia(rows, i);
+	else if(rows[i].status == "Scheduled" && missing != 0 && fstat != "EXIST")
+		// Insert error message
+		throwError(rows, i);
+	else if(rows[i].status == "Error" && fstat == "EXIST")
+		// Take off the media
+		deleteFilemedia(rows, i);
+
 }
 
 /*
 	Debug - View if file exists
 */
-function viewFilemedia(rows, i)
+function viewFilemedia(rows, i, callback)
 {
+	
 	fs.stat("media/"+rows[i].link,function(err, stat){
+		console.log("---------------------------");
 		if(err == null)
-			console.log("File '" + rows[i].link + "' exists");
+			{
+				console.log("File '" + rows[i].link + "' exists");
+				var fstat = "EXIST";
+				callback(rows, i, fstat);
+			}
 		else if(err.code == 'ENOENT')
-			console.log("File '" + rows[i].link + "' not exists");
+			{
+				console.log("File '" + rows[i].link + "' not exists");
+				var fstat = "NOTEXIST";
+				callback(rows, i, fstat);
+			}
 		else
-			console.log("Error: " + err.code);
+			{
+				console.log("Error: " + err.code);
+				var fstat = "ERROR";
+				callback(rows, i, fstat);
+			}
+	});
+
+	
+}
+
+/*
+	Debug - Take off a media file
+*/
+function deleteFilemedia(rows, i)
+{
+	// From the database
+	var sql = "UPDATE mediasources SET status = " + conn.escape("Expired") 	+ " WHERE id = '" + conn.escape(rows[i].id) + "'";
+
+	conn.query(sql, 
+				function(err,row, field){
+					if(err) throw err;
+					else console.log("Media file taken off");
+	});	
+	// From files
+	fs.unlink("media/"+rows[i].link, function(err) {
+	   if (err) {
+	      return console.error(err);
+	   }
+	   console.log("Media file deleted");
 	});
 }
+
 /*
+	Debug - Put error message in DB
 */
+function throwError(rows, i)
+{
+	// From the database
+	var sql = "UPDATE mediasources SET status = " 
+				+ conn.escape("Error") 
+				+ " WHERE id = '" 
+				+ conn.escape(rows[i].id) + "'";
+			
+	conn.query(sql, 
+				function(err,row, field){
+					if(err) throw err;
+					else console.log("Media file taken off");
+	});	
+}
+
