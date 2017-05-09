@@ -77,10 +77,10 @@ function viewDBmedia(rows, i, fstat)
 	console.log("Missing: " + Math.round(missing/60000) + " minutes");
 
 	// See the status of the register
-	if(rows[i].status == "Scheduled" && missing < 0 && fstat == "EXIST")
+	if(rows[i].status == "Scheduled" && missing < -60 && fstat == "EXIST")
 		// Take off the media
 		deleteFilemedia(rows, i);
-	else if(rows[i].status == "Scheduled" && missing != 0 && fstat != "EXIST")
+	else if(rows[i].status == "Scheduled" && missing > 0 && fstat != "EXIST")
 		// Insert error message
 		throwError(rows, i);
 	else if(rows[i].status == "Error" && fstat == "EXIST")
@@ -159,4 +159,3 @@ function throwError(rows, i)
 					else console.log("Media file taken off");
 	});	
 }
-
