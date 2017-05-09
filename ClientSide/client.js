@@ -89,7 +89,7 @@ app.get('/p', function(req, res) {
   		var response = {"weight":peso.toFixed(2), "height":(altura/100).toFixed(2)};
   		res.json(response);
   	}
-  	elseif(obj.op == "getAds")
+  	else if(obj.op == "getAds")
   	{
   		//sendVideos(localpath,res); OLD
   		getMedia(res, sendMedia);
@@ -118,7 +118,23 @@ function getMedia(res,callback)
 		{
 			for(var i in rows)
 			{
-				media.push(mediaServer + rows[i].link);		
+				var file = rows[i].link;
+				var extension = file.slice(file.lastIndexOf(".")+1);
+		    	var url = mediaServer + file;
+	        	// Image types
+		    	if(extension == "jpg" || extension == "png" || extension == "gif" || extension == "svg" || extension == "jpeg")
+		    	{
+		    		var ads = {"type":"img", "filename":file};
+		    		media.push(ads);
+		    	}
+	        	// Video types
+		    	else if(extension == "mp4")
+		    	{
+		    		var ads = {"type":"video", "filename":file};
+		    		media.push(ads);
+		    	}
+	        	// In case if type isn't know, it won't be added to queue
+
 			}
 			callback(res,media);
 		}
@@ -148,50 +164,50 @@ app.use('/', function(req,res){
 /*
     Receive new request and send price to Arduino.
 */
-function sendPrice(res, tarea, monto)
-{
-	var response = {"response":"OK"};
-  res.json(response);
-  // Sending price
-  if(port.isOpen())
-    port.write(monto.toString());
-  // DEBUG!!
-  /*
-	setTimeout(function(){
-		credito = monto;
-		completedFlag = 1;
+// function sendPrice(res, tarea, monto)
+// {
+// 	var response = {"response":"OK"};
+//   res.json(response);
+//   // Sending price
+//   if(port.isOpen())
+//     port.write(monto.toString());
+//   // DEBUG!!
+//   /*
+// 	setTimeout(function(){
+// 		credito = monto;
+// 		completedFlag = 1;
 
-	},5000);
-  */
-  // END DEBUG!!
-}
+// 	},5000);
+//   */
+//   // END DEBUG!!
+// }
 
-/*
-    Receiving data from ATMEGA328
-*/
-var msg = "";
-port.on('data', function(data){
-  // Data has the following format: "Credito_en_monedas","Pago_Completo_0_o_1", "longitud_medida", "peso_medido"
-  msg += data.toString();
-  if(msg.endsWith("\n"))
-  {
-    var elements = msg.split(","); // data separate by commas
-    credito = Number(elements[0]);
-    completedFlag = Number(elements[1]);
-    altura = Number(elements[2]) * 100; // Come as cm
-    peso = Number(elements[3]);
-    msg = "";
+// /*
+//     Receiving data from ATMEGA328
+// */
+// var msg = "";
+// port.on('data', function(data){
+//   // Data has the following format: "Credito_en_monedas","Pago_Completo_0_o_1", "longitud_medida", "peso_medido"
+//   msg += data.toString();
+//   if(msg.endsWith("\n"))
+//   {
+//     var elements = msg.split(","); // data separate by commas
+//     credito = Number(elements[0]);
+//     completedFlag = Number(elements[1]);
+//     altura = Number(elements[2]) * 100; // Come as cm
+//     peso = Number(elements[3]);
+//     msg = "";
 
-    // DEBUG!!
-  	console.log('credito: ' + credito);
-    console.log('completedFlag: ' + completedFlag);
-    console.log('altura: ' + altura);
-    console.log('peso: ' + peso);
-    // END DEBUG!!
-  }
+//     // DEBUG!!
+//   	console.log('credito: ' + credito);
+//     console.log('completedFlag: ' + completedFlag);
+//     console.log('altura: ' + altura);
+//     console.log('peso: ' + peso);
+//     // END DEBUG!!
+//   }
 
 
-  // DEBUG!!
-	//console.log('Data: ' + msg);
-  // END DEBUG!!
-});
+//   // DEBUG!!
+// 	//console.log('Data: ' + msg);
+//   // END DEBUG!!
+// });
